@@ -1,6 +1,6 @@
 {
   "name": "@writetome51/alphabetize",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Function orders an array of strings alphabetically",
   "main": "",
   "scripts": {
@@ -11,10 +11,13 @@
     "url": "git+https://github.com/writetome51/alphabetize.git"
   },
   "keywords": [
-    "basic",
-    "data-handling",
-    "functions",
-    "classes"
+    "string",
+    "strings",
+    "sorting",
+    "alphabetize",
+    "english",
+    "alphabet",
+    "function"
   ],
   "author": "Steve Thompson",
   "license": "MIT",
