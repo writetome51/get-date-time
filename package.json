@@ -1,0 +1,27 @@
+{
+  "name": "@writetome51/alphabetize",
+  "version": "1.0.0",
+  "description": "Function orders an array of strings alphabetically",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/writetome51/alphabetize.git"
+  },
+  "keywords": [
+    "basic",
+    "data-handling",
+    "functions",
+    "classes"
+  ],
+  "author": "Steve Thompson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/writetome51/alphabetize/issues"
+  },
+  "homepage": "https://github.com/writetome51/alphabetize#readme",
+  "dependencies": {
+  }
+}
