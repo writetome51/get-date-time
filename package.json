@@ -23,5 +23,6 @@
   },
   "homepage": "https://github.com/writetome51/alphabetize#readme",
   "dependencies": {
+    "basic-data-handling": "latest"
   }
 }
