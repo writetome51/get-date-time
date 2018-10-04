@@ -1,4 +1,6 @@
-Function that orders an array of strings alphabetically and returns void:
+Function that orders an array of strings alphabetically and returns void.
+If not every item in the array is a string, the function will attempt to coerce it into a string by 
+using String(item).
 
 alphabetize(strings);
 
