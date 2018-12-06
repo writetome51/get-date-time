@@ -1,6 +1,6 @@
 {
   "name": "@writetome51/alphabetize",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Function orders an array of strings alphabetically",
   "main": "index.js",
   "scripts": {
@@ -26,6 +26,6 @@
   },
   "homepage": "https://github.com/writetome51/alphabetize#readme",
   "dependencies": {
-    "basic-data-handling": "latest"
+    "basic-data-handling": "~1.0.13"
   }
 }
