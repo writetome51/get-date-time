@@ -1,10 +1,11 @@
 {
   "name": "@writetome51/alphabetize",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Function orders an array of strings alphabetically",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,6 @@
   },
   "homepage": "https://github.com/writetome51/alphabetize#readme",
   "dependencies": {
-    "basic-data-handling": "~1.0.13"
+    "basic-data-handling": "~1.0.15"
   }
 }

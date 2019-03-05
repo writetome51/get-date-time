@@ -1,4 +1,4 @@
-import { alphabetize } from './alphabetize';
+import { alphabetize } from './index';
 
 
 let strings = ['book', 'copy', 'zaa', 'aac', '_10', 100, 'aaa', 'atco',
