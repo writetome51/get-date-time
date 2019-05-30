@@ -1,13 +1,16 @@
-# getDateTime(
-	options? :  {
-		includeDate?: boolean,  // default is true
-		includeTime?: boolean,  // default is true
-		ymdOrder?: 'ymd' | 'ydm' | 'myd' | 'mdy' | 'dym' | 'dmy',  // default is 'ymd'
-		hmsOrder?: 'hms' | 'hsm' | 'msh' | 'mhs' | 'smh' | 'shm',  // default is 'hms'
-		separator?: string,  // default is '-'
-		separateEach?: boolean  // default is false
-	}
-): string
+# getDateTime(options?): string
+
+## options
+```ts
+{
+    includeDate?: boolean, // default true 
+    includeTime?: boolean, // default true
+    ymdOrder?: 'ymd' | 'ydm' | 'myd' | 'mdy' | 'dym' | 'dmy', // default 'ymd'
+    hmsOrder?: 'hms' | 'hsm' | 'msh' | 'mhs' | 'smh' | 'shm', // default 'hms'
+    separator?: string, // default '-' 
+    separateEach?: boolean // default false
+}
+```
 
 ## Examples
 ```ts
