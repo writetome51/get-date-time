@@ -3,29 +3,42 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var has_value_no_value_1 = require("@writetome51/has-value-no-value");
 var modify_object_1 = require("@writetome51/modify-object");
 // Returns current date and time as string.
-// Default format is YYMMDD-HHMMSS, i.e '190522-102210' .
-// Default `options`: {ymdOrder: 'ymd', hmsOrder: 'hms', separator: '-', separateEach: false}
-//
+// Default format is YYMMDD-HHMMSS, i.e '190522-142210'  for May 22, 2019, 2:22pm and 10 seconds.
+// Default `options`:  {
+// 				includeDate: true, includeTime: true, ymdOrder: 'ymd', hmsOrder: 'hms',
+//				separator: '-', separateEach: false
+//			}
+// (See `getDateTimeOptions` at the bottom for more info.)
 // You can change the order that year, month, day appear using `ymdOrder`.
 // You can change the order that hour, minutes, seconds appear using `hmsOrder`.
-// (For both those parameters you use only 3 characters.)
 // You can use any `separator` you want.
 // `separateEach` gives you the option of separating each part like so:  'yy-mm-dd-hh-mm-ss'.
-function getDateTime(options) {
+function getDateTime(
+// If left undefined, we use `defaults`.
+options) {
     if (options === void 0) { options = undefined; }
-    var defaults = { ymdOrder: 'ymd', hmsOrder: 'hms', separator: '-', separateEach: false };
+    var defaults = {
+        includeDate: true, includeTime: true, ymdOrder: 'ymd', hmsOrder: 'hms',
+        separator: '-', separateEach: false
+    };
     if (has_value_no_value_1.hasValue(options))
         modify_object_1.modifyObject(defaults, options);
     var date = new Date();
     var year = String(date.getFullYear()).slice(2); // trims off first 2 digits.
-    var month = ensureTwoDigits(date.getMonth() + 1);
-    var day = ensureTwoDigits(date.getDate());
-    var hour = ensureTwoDigits(date.getHours());
-    var mins = ensureTwoDigits(date.getMinutes());
-    var secs = ensureTwoDigits(date.getSeconds());
-    var dateStr = getFormatted('date', defaults.ymdOrder);
-    var timeStr = getFormatted('time', defaults.hmsOrder);
+    var _a = getMonthDayHourMinutesSeconds(), month = _a[0], day = _a[1], hour = _a[2], mins = _a[3], secs = _a[4];
+    var dateStr = (defaults.includeDate ? getFormatted('date', defaults.ymdOrder) : '');
+    var timeStr = (defaults.includeTime ? getFormatted('time', defaults.hmsOrder) : '');
+    if (!(defaults.includeDate) || !(defaults.includeTime))
+        defaults.separator = '';
     return ('' + dateStr + defaults.separator + timeStr);
+    function getMonthDayHourMinutesSeconds() {
+        var parts = [(date.getMonth() + 1), (date.getDate()), (date.getHours()),
+            (date.getMinutes()), (date.getSeconds())];
+        var results = [], i = -1;
+        while (++i < parts.length)
+            results.push(ensureTwoDigits(parts[i]));
+        return results;
+    }
     function ensureTwoDigits(str) {
         if (String(str).length === 1)
             str = ('0' + str);

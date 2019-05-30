@@ -12,3 +12,17 @@ res = index_1.getDateTime(u);
 console.log(res);
 res = index_1.getDateTime({ ymdOrder: 'mdy', hmsOrder: 'smh', separateEach: true, separator: '*' });
 console.log(res);
+res = index_1.getDateTime({
+    ymdOrder: 'mdy',
+    includeTime: false,
+    separateEach: true,
+    separator: '*'
+});
+console.log(res);
+res = index_1.getDateTime({
+    hmsOrder: 'msh',
+    includeDate: false,
+    //	separateEach: true,
+    separator: '*'
+});
+console.log(res);

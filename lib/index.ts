@@ -2,36 +2,47 @@ import { hasValue } from '@writetome51/has-value-no-value';
 import { modifyObject } from '@writetome51/modify-object';
 
 // Returns current date and time as string.
-// Default format is YYMMDD-HHMMSS, i.e '190522-102210' .
-// Default `options`: {ymdOrder: 'ymd', hmsOrder: 'hms', separator: '-', separateEach: false}
-//
+// Default format is YYMMDD-HHMMSS, i.e '190522-142210'  for May 22, 2019, 2:22pm and 10 seconds.
+// Default `options`:  {
+// 				includeDate: true, includeTime: true, ymdOrder: 'ymd', hmsOrder: 'hms',
+//				separator: '-', separateEach: false
+//			}
+// (See `getDateTimeOptions` at the bottom for more info.)
 // You can change the order that year, month, day appear using `ymdOrder`.
 // You can change the order that hour, minutes, seconds appear using `hmsOrder`.
-// (For both those parameters you use only 3 characters.)
 // You can use any `separator` you want.
 // `separateEach` gives you the option of separating each part like so:  'yy-mm-dd-hh-mm-ss'.
 
 
 export function getDateTime(
+	// If left undefined, we use `defaults`.
 	options: getDateTimeOptions = undefined
 ): string {
 
-	let defaults = {ymdOrder: 'ymd', hmsOrder: 'hms', separator: '-', separateEach: false};
+	let defaults = {
+		includeDate: true, includeTime: true, ymdOrder: 'ymd', hmsOrder: 'hms',
+		separator: '-', separateEach: false
+	};
 	if (hasValue(options)) modifyObject(defaults, options);
+
 	let date = new Date();
-
 	let year = String(date.getFullYear()).slice(2); // trims off first 2 digits.
-	let month = ensureTwoDigits(date.getMonth() + 1);
-	let day = ensureTwoDigits(date.getDate());
 
-	let hour = ensureTwoDigits(date.getHours());
-	let mins = ensureTwoDigits(date.getMinutes());
-	let secs = ensureTwoDigits(date.getSeconds());
+	let [month, day, hour, mins, secs] = getMonthDayHourMinutesSeconds();
 
-	let dateStr = getFormatted('date', defaults.ymdOrder);
-	let timeStr = getFormatted('time', defaults.hmsOrder);
-
+	let dateStr = (defaults.includeDate ? getFormatted('date', defaults.ymdOrder) : '');
+	let timeStr = (defaults.includeTime ? getFormatted('time', defaults.hmsOrder) : '');
+	if (!(defaults.includeDate) || !(defaults.includeTime)) defaults.separator = '';
 	return ('' + dateStr + defaults.separator + timeStr);
+
+
+	function getMonthDayHourMinutesSeconds() {
+		let parts = [(date.getMonth() + 1), (date.getDate()), (date.getHours()),
+			(date.getMinutes()), (date.getSeconds())];
+		let results = [], i = -1;
+		while (++i < parts.length) results.push(ensureTwoDigits(parts[i]));
+		return results;
+	}
 
 
 	function ensureTwoDigits(str) {
@@ -56,6 +67,8 @@ export function getDateTime(
 
 
 export interface getDateTimeOptions {
+	includeDate?: boolean,
+	includeTime?: boolean,
 	ymdOrder?: 'ymd' | 'ydm' | 'myd' | 'mdy' | 'dym' | 'dmy',
 	hmsOrder?: 'hms' | 'hsm' | 'msh' | 'mhs' | 'smh' | 'shm',
 	separator?: string,
