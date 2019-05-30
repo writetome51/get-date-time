@@ -1,7 +1,7 @@
 {
-  "name": "@writetome51/alphabetize",
-  "version": "1.0.6",
-  "description": "Function orders an array of strings alphabetically",
+  "name": "@writetome51/get-date-time",
+  "version": "1.0.0",
+  "description": "Returns date and time as string, with this default format: YYMMDD-HHMMSS . You have options to change format.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -13,12 +13,10 @@
   },
   "keywords": [
     "string",
-    "strings",
-    "sorting",
-    "alphabetize",
-    "english",
-    "alphabet",
-    "function"
+    "date",
+    "dates",
+    "time",
+    "options"
   ],
   "author": "Steve Thompson",
   "license": "MIT",
@@ -27,6 +25,7 @@
   },
   "homepage": "https://github.com/writetome51/alphabetize#readme",
   "dependencies": {
-    "error-if-not-array": "~1.0.0"
+    "@writetome51/has-value-no-value": "^1.0.2",
+    "@writetome51/modify-object": "^1.0.0"
   }
 }
