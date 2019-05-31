@@ -3,6 +3,7 @@
 ## options
 ```ts
 {
+    includeFullYear?: boolean, // default false
     includeDate?: boolean, // default true 
     includeTime?: boolean, // default true
     ymdOrder?: 'ymd' | 'ydm' | 'myd' | 'mdy' | 'dym' | 'dmy', // default 'ymd'
