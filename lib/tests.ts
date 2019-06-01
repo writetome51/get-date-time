@@ -1,41 +1,39 @@
-import { getDateTime } from './index';
+import { getDateTimeID } from './index';
 
 
-let res = getDateTime();
+let res = getDateTimeID();
 
 console.log(res);
 
-res = getDateTime({ymdOrder: 'mdy'});
+res = getDateTimeID({ymdOrder: 'mdy'});
 
 console.log(res);
 
 let u = undefined;
-res = getDateTime(u, u, '_');
+res = getDateTimeID(u, u, '_');
 
 console.log(res);
 
 
-res = getDateTime(u);
+res = getDateTimeID(u);
 console.log(res);
 
 
-res = getDateTime({ymdOrder: 'mdy', hmsOrder: 'smh', separateEach: true, separator: '*'});
+res = getDateTimeID({ymdOrder: 'mdy', hmsOrder: 'smh', separateEach: true, separator: '*'});
 console.log(res);
 
 
-res = getDateTime({
+res = getDateTimeID({
 	ymdOrder: 'mdy',
-	includeTime: false,
 	separateEach: true,
 	separator: '*'
 });
 console.log(res);
 
 
-res = getDateTime({
+res = getDateTimeID({
+	includeFullYear:true,
 	hmsOrder: 'msh',
-	includeDate: false,
-//	separateEach: true,
-	separator: '*'
+	separator: ''
 });
 console.log(res);

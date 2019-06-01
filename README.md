@@ -1,11 +1,9 @@
-# getDateTime(options?): string
+# getDateTimeID(options?): string
 
 ## options
 ```ts
 {
     includeFullYear?: boolean, // default false
-    includeDate?: boolean, // default true 
-    includeTime?: boolean, // default true
     ymdOrder?: 'ymd' | 'ydm' | 'myd' | 'mdy' | 'dym' | 'dmy', // default 'ymd'
     hmsOrder?: 'hms' | 'hsm' | 'msh' | 'mhs' | 'smh' | 'shm', // default 'hms'
     separator?: string, // default '-' 
@@ -18,9 +16,6 @@
 getDateTime();
 // --> '190522-142210'
 
-getDateTime({includeTime: false, separateEach: true});
-// --> '19-05-22'
-
 getDateTime({ymdOrder: 'mdy'});
 // --> '052219-142210'
 
@@ -29,9 +24,6 @@ getDateTime({ymdOrder: 'mdy', separator: ''});
 
 getDateTime({ymdOrder: 'mdy', separateEach: true});
 // --> '05-22-19-14-22-10'
-
-getDateTime({hmsOrder: 'smh',  includeDate: false,  separator: '__',  separateEach: true});
-// --> '10__22__14'
 ```
 
 

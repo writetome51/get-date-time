@@ -1,28 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var index_1 = require("./index");
-var res = index_1.getDateTime();
+var res = index_1.getDateTimeID();
 console.log(res);
-res = index_1.getDateTime({ ymdOrder: 'mdy' });
+res = index_1.getDateTimeID({ ymdOrder: 'mdy' });
 console.log(res);
 var u = undefined;
-res = index_1.getDateTime(u, u, '_');
+res = index_1.getDateTimeID(u, u, '_');
 console.log(res);
-res = index_1.getDateTime(u);
+res = index_1.getDateTimeID(u);
 console.log(res);
-res = index_1.getDateTime({ ymdOrder: 'mdy', hmsOrder: 'smh', separateEach: true, separator: '*' });
+res = index_1.getDateTimeID({ ymdOrder: 'mdy', hmsOrder: 'smh', separateEach: true, separator: '*' });
 console.log(res);
-res = index_1.getDateTime({
+res = index_1.getDateTimeID({
     ymdOrder: 'mdy',
-    includeTime: false,
     separateEach: true,
     separator: '*'
 });
 console.log(res);
-res = index_1.getDateTime({
+res = index_1.getDateTimeID({
+    includeFullYear: true,
     hmsOrder: 'msh',
-    includeDate: false,
-    //	separateEach: true,
-    separator: '*'
+    separator: ''
 });
 console.log(res);

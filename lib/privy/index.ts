@@ -3,7 +3,7 @@ import { modifyObject } from '@writetome51/modify-object';
 import { not } from '@writetome51/not';
 
 
-// Returns array of strings representing [year, month, day] (in that order).
+// Returns array of strings representing current [year, month, day] (in that order).
 // Example:  ['15', '02', '20']  (meaning 2015, February, the 20th)
 
 export function getYearMonthDay_asArray(includeFullYear = false): string[] {
@@ -17,6 +17,9 @@ export function getYearMonthDay_asArray(includeFullYear = false): string[] {
 	return results;
 }
 
+
+// Returns array of strings representing current [hours, minutes, seconds] (in that order).
+// Example:  ['16', '20', '20']  (meaning 4:20pm and 20 seconds)
 
 export function getHoursMinutesSeconds_asArray(): string[] {
 	let date = new Date();
@@ -36,33 +39,33 @@ export function ensureMoreThanOneDigit(str) {
 }
 
 
-export function getFormattedDate(
+export function getDateID(
 	options: getFormattedDateOptions = undefined
 ): string {
 	let defaults = getDefaultsFor_getFormattedDateOptions();
 	if (hasValue(options)) modifyObject(defaults, options);
 
-	return __getFormattedDateOrTime(defaults, () => {
+	return __getDateOrTimeID(defaults, () => {
 		let [year, month, day] = getYearMonthDay_asArray(defaults.includeFullYear);
 		return {y: year, m: month, d: day};
 	});
 }
 
 
-export function getFormattedTime(
+export function getTimeID(
 	options: getFormattedTimeOptions = undefined
 ): string {
 	let defaults = getDefaultsFor_getFormattedTimeOptions();
 	if (hasValue(options)) modifyObject(defaults, options);
 
-	return __getFormattedDateOrTime(defaults, () => {
+	return __getDateOrTimeID(defaults, () => {
 		let [hour, mins, secs] = getHoursMinutesSeconds_asArray();
 		return {h: hour, m: mins, s: secs};
 	});
 }
 
 
-export function __getFormattedDateOrTime(options, getKeys: () => Object) {
+export function __getDateOrTimeID(options, getKeys: () => Object) {
 	// @ts-ignore
 	options.order = options.order.toLowerCase();
 	if (options.order.length !== 3) throw new Error('Input must be string 3 characters long');
@@ -100,34 +103,47 @@ export interface getFormattedDateOptions extends YearFormattingSeparatorOptions 
 
 
 export interface getDateTimeOptions extends YearFormattingSeparatorOptions {
-	includeDate?: boolean,
-	includeTime?: boolean,
 	ymdOrder?: DateFormatOrder,
 	hmsOrder?: TimeFormatOrder
 }
 
 
 export function getDefaultsFor_FormattingSeparatorOptions(): FormattingSeparatorOptions {
-	return {separator: '-', separateEach: false};
+	return {separator: default_separator, separateEach: default_separateEach};
 }
 
 
 export function getDefaultsFor_getFormattedTimeOptions(): getFormattedTimeOptions {
 	let defaults = getDefaultsFor_FormattingSeparatorOptions();
-	defaults['order'] = 'hms';
+	defaults['order'] = default_hmsOrder;
 	return defaults;
 }
 
 
 export function getDefaultsFor_YearFormattingSeparatorOptions(): YearFormattingSeparatorOptions {
 	let defaults = getDefaultsFor_FormattingSeparatorOptions();
-	defaults['includeFullYear'] = false;
+	defaults['includeFullYear'] = default_includeFullYear;
 	return defaults;
 }
 
 
 export function getDefaultsFor_getFormattedDateOptions(): getFormattedDateOptions {
 	let defaults = getDefaultsFor_YearFormattingSeparatorOptions();
-	defaults['order'] = 'ymd';
+	defaults['order'] = default_ymdOrder;
 	return defaults;
 }
+
+
+export function getDefaultsFor_getDateTimeOptions(): getDateTimeOptions {
+	let defaults = getDefaultsFor_YearFormattingSeparatorOptions();
+	defaults['ymdOrder'] = default_ymdOrder;
+	defaults['hmsOrder'] = default_hmsOrder;
+	return defaults;
+}
+
+
+export let default_ymdOrder = 'ymd';
+export let default_hmsOrder = 'hms';
+export let default_includeFullYear = false;
+export let default_separator = '-';
+export let default_separateEach = false;
