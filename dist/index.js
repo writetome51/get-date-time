@@ -35,9 +35,12 @@ options) {
     return (dateStr + defaults.separator + timeStr);
 }
 exports.getDateTime = getDateTime;
-function getYearMonthDay() {
+function getYearMonthDay(includeFullYear) {
+    if (includeFullYear === void 0) { includeFullYear = false; }
     var date = new Date();
     var parts = [String(date.getFullYear()), String(date.getMonth() + 1), String(date.getDate())];
+    if (not_1.not(includeFullYear))
+        parts[0] = parts[0].slice(2); // trims off first 2 digits.
     var results = [], i = -1;
     while (++i < parts.length)
         results.push(ensureMoreThanOneDigit(parts[i]));
@@ -58,25 +61,24 @@ function ensureMoreThanOneDigit(str) {
 }
 function getFormattedDate(options) {
     if (options === void 0) { options = { order: 'ymd', includeFullYear: false, separateEach: false, separator: '-' }; }
-    // @ts-ignore
-    order = order.toLowerCase();
-    if (options.order.length !== 3)
-        throw new Error('Input must be string 3 characters long');
-    var _a = getYearMonthDay(), year = _a[0], month = _a[1], day = _a[2];
-    if (not_1.not(options.includeFullYear))
-        year = year.slice(2); // trims off first 2 digits.
-    var keys = { y: year, m: month, d: day };
-    var sep = options.separateEach ? options.separator : '';
-    return (keys[options.order[0]] + sep + keys[options.order[1]] + sep + keys[options.order[2]]);
+    return __getFormattedDateOrTime(options, function () {
+        var _a = getYearMonthDay(options.includeFullYear), year = _a[0], month = _a[1], day = _a[2];
+        return { y: year, m: month, d: day };
+    });
 }
 function getFormattedTime(options) {
     if (options === void 0) { options = { order: 'hms', separateEach: false, separator: '-' }; }
+    return __getFormattedDateOrTime(options, function () {
+        var _a = getHoursMinutesSeconds(), hour = _a[0], mins = _a[1], secs = _a[2];
+        return { h: hour, m: mins, s: secs };
+    });
+}
+function __getFormattedDateOrTime(options, getKeys) {
     // @ts-ignore
     order = order.toLowerCase();
     if (options.order.length !== 3)
         throw new Error('Input must be string 3 characters long');
-    var _a = getHoursMinutesSeconds(), hour = _a[0], mins = _a[1], secs = _a[2];
-    var keys = { h: hour, m: mins, s: secs };
+    var keys = getKeys();
     var sep = options.separateEach ? options.separator : '';
     return (keys[options.order[0]] + sep + keys[options.order[1]] + sep + keys[options.order[2]]);
 }
