@@ -2,15 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var has_value_no_value_1 = require("@writetome51/has-value-no-value");
 var modify_object_1 = require("@writetome51/modify-object");
+var get_array_year_month_day_hours_minutes_seconds_1 = require("@writetome51/get-array-year-month-day-hours-minutes-seconds");
 // Returns current date as string of digits.
 // Default format is yymmdd, i.e '190522' for May 22, 2019.
 function getDateID(options) {
     if (options === void 0) { options = undefined; }
     var defaults = getDefaultsFor_getDateIDOptions();
-    if (has_value_no_value_1.hasValue(options))
-        modify_object_1.modifyObject(defaults, options);
-    return __getDateOrTimeID(defaults, function () {
-        var _a = getYearMonthDayIDs(defaults.includeFullYear), year = _a[0], month = _a[1], day = _a[2];
+    return __getDateOrTimeID(defaults, options, function () {
+        var _a = get_array_year_month_day_hours_minutes_seconds_1.getArray_yearMonthDay(defaults.includeFullYear), year = _a[0], month = _a[1], day = _a[2];
         return { y: year, m: month, d: day };
     });
 }
@@ -19,23 +18,24 @@ exports.getDateID = getDateID;
 // Default format is hhmmss, i.e '162020' for 4:20pm and 20 seconds.
 function getTimeID(options) {
     if (options === void 0) { options = undefined; }
-    var defaults = getDefaultsFor_getTimeIDOptions();
-    if (has_value_no_value_1.hasValue(options))
-        modify_object_1.modifyObject(defaults, options);
-    return __getDateOrTimeID(defaults, function () {
-        var _a = getHoursMinutesSeconds(), hour = _a[0], mins = _a[1], secs = _a[2];
+    return __getDateOrTimeID(getDefaultsFor_getTimeIDOptions(), options, function () {
+        var _a = get_array_year_month_day_hours_minutes_seconds_1.getArray_hoursMinutesSeconds(), hour = _a[0], mins = _a[1], secs = _a[2];
         return { h: hour, m: mins, s: secs };
     });
 }
 exports.getTimeID = getTimeID;
-function __getDateOrTimeID(options, getParts) {
+function __getDateOrTimeID(defaultOptions, options, getParts // must return object with 3 letter properties, either {y,m,d} or {h,m,s}
+) {
+    if (has_value_no_value_1.hasValue(options))
+        modify_object_1.modifyObject(defaultOptions, options);
     // @ts-ignore
-    options.order = options.order.toLowerCase();
-    if (options.order.length !== 3)
+    defaultOptions.order = defaultOptions.order.toLowerCase();
+    if (defaultOptions.order.length !== 3)
         throw new Error('Input must be string 3 characters long');
-    var parts = getParts(); // must return object with 3 letter properties, either {y,m,d} or {h,m,s}
-    var sep = options.separateEach ? options.separator : '';
-    return (parts[options.order[0]] + sep + parts[options.order[1]] + sep + parts[options.order[2]]);
+    var parts = getParts();
+    var sep = defaultOptions.separateEach ? defaultOptions.separator : '';
+    return (parts[defaultOptions.order[0]] + sep + parts[defaultOptions.order[1]] +
+        sep + parts[defaultOptions.order[2]]);
 }
 exports.__getDateOrTimeID = __getDateOrTimeID;
 function getDefaultsFor_SeparatorOptions() {

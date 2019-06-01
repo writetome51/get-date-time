@@ -1,5 +1,12 @@
 import { hasValue } from '@writetome51/has-value-no-value';
 import { modifyObject } from '@writetome51/modify-object';
+import { getArray_hoursMinutesSeconds, getArray_yearMonthDay }
+	from '@writetome51/get-array-year-month-day-hours-minutes-seconds';
+import {
+	getDateIDOptions, getDateTimeIDOptions, getTimeIDOptions, SeparatorOptions, YearSeparatorOptions
+}
+	from './interfaces';
+
 
 // Returns current date as string of digits.
 // Default format is yymmdd, i.e '190522' for May 22, 2019.
@@ -7,13 +14,17 @@ import { modifyObject } from '@writetome51/modify-object';
 export function getDateID(
 	options: getDateIDOptions = undefined
 ): string {
-	let defaults = getDefaultsFor_getDateIDOptions();
-	if (hasValue(options)) modifyObject(defaults, options);
 
-	return __getDateOrTimeID(defaults, () => {
-		let [year, month, day] = getYearMonthDayIDs(defaults.includeFullYear);
-		return {y: year, m: month, d: day};
-	});
+	let defaults = getDefaultsFor_getDateIDOptions();
+
+	return __getDateOrTimeID(
+		defaults,
+		options,
+		() => {
+			let [year, month, day] = getArray_yearMonthDay(defaults.includeFullYear);
+			return {y: year, m: month, d: day};
+		}
+	);
 }
 
 
@@ -23,56 +34,34 @@ export function getDateID(
 export function getTimeID(
 	options: getTimeIDOptions = undefined
 ): string {
-	let defaults = getDefaultsFor_getTimeIDOptions();
-	if (hasValue(options)) modifyObject(defaults, options);
 
-	return __getDateOrTimeID(defaults, () => {
-		let [hour, mins, secs] = getHoursMinutesSeconds();
-		return {h: hour, m: mins, s: secs};
-	});
+	return __getDateOrTimeID(
+		getDefaultsFor_getTimeIDOptions(),
+		options,
+		() => {
+			let [hour, mins, secs] = getArray_hoursMinutesSeconds();
+			return {h: hour, m: mins, s: secs};
+		}
+	);
 }
 
 
-export function __getDateOrTimeID(options, getParts: () => Object) {
+export function __getDateOrTimeID(
+	defaultOptions,
+	options: getDateIDOptions | getTimeIDOptions,
+	getParts: () => Object // must return object with 3 letter properties, either {y,m,d} or {h,m,s}
+) {
+	if (hasValue(options)) modifyObject(defaultOptions, options);
 	// @ts-ignore
-	options.order = options.order.toLowerCase();
-	if (options.order.length !== 3) throw new Error('Input must be string 3 characters long');
+	defaultOptions.order = defaultOptions.order.toLowerCase();
+	if (defaultOptions.order.length !== 3) throw new Error('Input must be string 3 characters long');
 
-	let parts = getParts(); // must return object with 3 letter properties, either {y,m,d} or {h,m,s}
+	let parts = getParts();
 
-	let sep = options.separateEach ? options.separator : '';
-	return (parts[options.order[0]] + sep + parts[options.order[1]] + sep + parts[options.order[2]]);
-}
+	let sep = defaultOptions.separateEach ? defaultOptions.separator : '';
 
-
-export type DateFormatOrder = 'ymd' | 'ydm' | 'myd' | 'mdy' | 'dym' | 'dmy';
-export type TimeFormatOrder = 'hms' | 'hsm' | 'msh' | 'mhs' | 'smh' | 'shm';
-
-
-export interface SeparatorOptions {
-	separator?: string,
-	separateEach?: boolean
-}
-
-
-export interface getTimeIDOptions extends SeparatorOptions {
-	order?: TimeFormatOrder
-}
-
-
-export interface YearSeparatorOptions extends SeparatorOptions {
-	includeFullYear?: boolean
-}
-
-
-export interface getDateIDOptions extends YearSeparatorOptions {
-	order?: DateFormatOrder,
-}
-
-
-export interface getDateTimeIDOptions extends YearSeparatorOptions {
-	ymdOrder?: DateFormatOrder,
-	hmsOrder?: TimeFormatOrder
+	return (parts[defaultOptions.order[0]] + sep + parts[defaultOptions.order[1]] +
+		sep + parts[defaultOptions.order[2]]);
 }
 
 

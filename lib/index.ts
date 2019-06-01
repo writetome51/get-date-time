@@ -1,8 +1,7 @@
 import { hasValue } from '@writetome51/has-value-no-value';
 import { modifyObject } from '@writetome51/modify-object';
-import {
-	getDateTimeIDOptions, getDefaultsFor_getDateTimeIDOptions, getDateID, getTimeID
-} from './privy';
+import { getDefaultsFor_getDateTimeIDOptions, getDateID, getTimeID } from './privy';
+import { getDateTimeIDOptions } from './privy/interfaces';
 
 // Returns current date and time as string of digits.
 // Default format is yymmdd-hhmmss, i.e '190522-142210'  for May 22, 2019, 2:22pm and 10 seconds.

@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/writetome51/alphabetize#readme",
   "dependencies": {
+    "@writetome51/get-array-year-month-day-hours-minutes-seconds": "0.0.1",
     "@writetome51/has-value-no-value": "^1.0.2",
     "@writetome51/modify-object": "^1.0.0",
     "@writetome51/not": "^1.0.5"

@@ -1,4 +1,5 @@
 import { getDateTimeID } from './index';
+import { getDateID } from './privy';
 
 
 let res = getDateTimeID();
@@ -32,8 +33,12 @@ console.log(res);
 
 
 res = getDateTimeID({
-	includeFullYear:true,
+	includeFullYear: true,
 	hmsOrder: 'msh',
 	separator: ''
 });
+console.log(res);
+
+
+res = getDateID({separateEach: true, includeFullYear:true});
 console.log(res);

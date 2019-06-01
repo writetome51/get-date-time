@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var index_1 = require("./index");
+var privy_1 = require("./privy");
 var res = index_1.getDateTimeID();
 console.log(res);
 res = index_1.getDateTimeID({ ymdOrder: 'mdy' });
@@ -23,4 +24,6 @@ res = index_1.getDateTimeID({
     hmsOrder: 'msh',
     separator: ''
 });
+console.log(res);
+res = privy_1.getDateID({ separateEach: true, includeFullYear: true });
 console.log(res);
