@@ -2,99 +2,71 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var has_value_no_value_1 = require("@writetome51/has-value-no-value");
 var modify_object_1 = require("@writetome51/modify-object");
-var not_1 = require("@writetome51/not");
-// Returns array of strings representing current [year, month, day] (in that order).
-// Example:  ['15', '02', '20']  (meaning 2015, February, the 20th)
-function getYearMonthDay_asArray(includeFullYear) {
-    if (includeFullYear === void 0) { includeFullYear = false; }
-    var date = new Date();
-    var parts = [String(date.getFullYear()), String(date.getMonth() + 1), String(date.getDate())];
-    if (not_1.not(includeFullYear))
-        parts[0] = parts[0].slice(2); // trims off first 2 digits.
-    var results = [], i = -1;
-    while (++i < parts.length)
-        results.push(ensureMoreThanOneDigit(parts[i]));
-    return results;
-}
-exports.getYearMonthDay_asArray = getYearMonthDay_asArray;
-// Returns array of strings representing current [hours, minutes, seconds] (in that order).
-// Example:  ['16', '20', '20']  (meaning 4:20pm and 20 seconds)
-function getHoursMinutesSeconds_asArray() {
-    var date = new Date();
-    var parts = [String(date.getHours()), String(date.getMinutes()), String(date.getSeconds())];
-    var results = [], i = -1;
-    while (++i < parts.length)
-        results.push(ensureMoreThanOneDigit(parts[i]));
-    return results;
-}
-exports.getHoursMinutesSeconds_asArray = getHoursMinutesSeconds_asArray;
-function ensureMoreThanOneDigit(str) {
-    if (String(str).length === 1)
-        str = ('0' + str);
-    return str;
-}
-exports.ensureMoreThanOneDigit = ensureMoreThanOneDigit;
+// Returns current date as string of digits.
+// Default format is yymmdd, i.e '190522' for May 22, 2019.
 function getDateID(options) {
     if (options === void 0) { options = undefined; }
-    var defaults = getDefaultsFor_getFormattedDateOptions();
+    var defaults = getDefaultsFor_getDateIDOptions();
     if (has_value_no_value_1.hasValue(options))
         modify_object_1.modifyObject(defaults, options);
     return __getDateOrTimeID(defaults, function () {
-        var _a = getYearMonthDay_asArray(defaults.includeFullYear), year = _a[0], month = _a[1], day = _a[2];
+        var _a = getYearMonthDayIDs(defaults.includeFullYear), year = _a[0], month = _a[1], day = _a[2];
         return { y: year, m: month, d: day };
     });
 }
 exports.getDateID = getDateID;
+// Returns current time as string of digits.
+// Default format is hhmmss, i.e '162020' for 4:20pm and 20 seconds.
 function getTimeID(options) {
     if (options === void 0) { options = undefined; }
-    var defaults = getDefaultsFor_getFormattedTimeOptions();
+    var defaults = getDefaultsFor_getTimeIDOptions();
     if (has_value_no_value_1.hasValue(options))
         modify_object_1.modifyObject(defaults, options);
     return __getDateOrTimeID(defaults, function () {
-        var _a = getHoursMinutesSeconds_asArray(), hour = _a[0], mins = _a[1], secs = _a[2];
+        var _a = getHoursMinutesSeconds(), hour = _a[0], mins = _a[1], secs = _a[2];
         return { h: hour, m: mins, s: secs };
     });
 }
 exports.getTimeID = getTimeID;
-function __getDateOrTimeID(options, getKeys) {
+function __getDateOrTimeID(options, getParts) {
     // @ts-ignore
     options.order = options.order.toLowerCase();
     if (options.order.length !== 3)
         throw new Error('Input must be string 3 characters long');
-    var keys = getKeys(); // must return object with 3 letter keys, either {y, m, d} or {h, m, s}
+    var parts = getParts(); // must return object with 3 letter properties, either {y,m,d} or {h,m,s}
     var sep = options.separateEach ? options.separator : '';
-    return (keys[options.order[0]] + sep + keys[options.order[1]] + sep + keys[options.order[2]]);
+    return (parts[options.order[0]] + sep + parts[options.order[1]] + sep + parts[options.order[2]]);
 }
 exports.__getDateOrTimeID = __getDateOrTimeID;
-function getDefaultsFor_FormattingSeparatorOptions() {
+function getDefaultsFor_SeparatorOptions() {
     return { separator: exports.default_separator, separateEach: exports.default_separateEach };
 }
-exports.getDefaultsFor_FormattingSeparatorOptions = getDefaultsFor_FormattingSeparatorOptions;
-function getDefaultsFor_getFormattedTimeOptions() {
-    var defaults = getDefaultsFor_FormattingSeparatorOptions();
+exports.getDefaultsFor_SeparatorOptions = getDefaultsFor_SeparatorOptions;
+function getDefaultsFor_getTimeIDOptions() {
+    var defaults = getDefaultsFor_SeparatorOptions();
     defaults['order'] = exports.default_hmsOrder;
     return defaults;
 }
-exports.getDefaultsFor_getFormattedTimeOptions = getDefaultsFor_getFormattedTimeOptions;
-function getDefaultsFor_YearFormattingSeparatorOptions() {
-    var defaults = getDefaultsFor_FormattingSeparatorOptions();
+exports.getDefaultsFor_getTimeIDOptions = getDefaultsFor_getTimeIDOptions;
+function getDefaultsFor_YearSeparatorOptions() {
+    var defaults = getDefaultsFor_SeparatorOptions();
     defaults['includeFullYear'] = exports.default_includeFullYear;
     return defaults;
 }
-exports.getDefaultsFor_YearFormattingSeparatorOptions = getDefaultsFor_YearFormattingSeparatorOptions;
-function getDefaultsFor_getFormattedDateOptions() {
-    var defaults = getDefaultsFor_YearFormattingSeparatorOptions();
+exports.getDefaultsFor_YearSeparatorOptions = getDefaultsFor_YearSeparatorOptions;
+function getDefaultsFor_getDateIDOptions() {
+    var defaults = getDefaultsFor_YearSeparatorOptions();
     defaults['order'] = exports.default_ymdOrder;
     return defaults;
 }
-exports.getDefaultsFor_getFormattedDateOptions = getDefaultsFor_getFormattedDateOptions;
-function getDefaultsFor_getDateTimeOptions() {
-    var defaults = getDefaultsFor_YearFormattingSeparatorOptions();
+exports.getDefaultsFor_getDateIDOptions = getDefaultsFor_getDateIDOptions;
+function getDefaultsFor_getDateTimeIDOptions() {
+    var defaults = getDefaultsFor_YearSeparatorOptions();
     defaults['ymdOrder'] = exports.default_ymdOrder;
     defaults['hmsOrder'] = exports.default_hmsOrder;
     return defaults;
 }
-exports.getDefaultsFor_getDateTimeOptions = getDefaultsFor_getDateTimeOptions;
+exports.getDefaultsFor_getDateTimeIDOptions = getDefaultsFor_getDateTimeIDOptions;
 exports.default_ymdOrder = 'ymd';
 exports.default_hmsOrder = 'hms';
 exports.default_includeFullYear = false;

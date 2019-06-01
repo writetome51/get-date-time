@@ -1,79 +1,47 @@
 import { hasValue } from '@writetome51/has-value-no-value';
 import { modifyObject } from '@writetome51/modify-object';
-import { not } from '@writetome51/not';
 
-
-// Returns array of strings representing current [year, month, day] (in that order).
-// Example:  ['15', '02', '20']  (meaning 2015, February, the 20th)
-
-export function getYearMonthDay_asArray(includeFullYear = false): string[] {
-	let date = new Date();
-
-	let parts = [String(date.getFullYear()), String(date.getMonth() + 1), String(date.getDate())];
-	if (not(includeFullYear)) parts[0] = parts[0].slice(2); // trims off first 2 digits.
-
-	let results = [], i = -1;
-	while (++i < parts.length) results.push(ensureMoreThanOneDigit(parts[i]));
-	return results;
-}
-
-
-// Returns array of strings representing current [hours, minutes, seconds] (in that order).
-// Example:  ['16', '20', '20']  (meaning 4:20pm and 20 seconds)
-
-export function getHoursMinutesSeconds_asArray(): string[] {
-	let date = new Date();
-
-	let parts = [String(date.getHours()), String(date.getMinutes()), String(date.getSeconds())];
-
-	let results = [], i = -1;
-	while (++i < parts.length) results.push(ensureMoreThanOneDigit(parts[i]));
-	return results;
-}
-
-
-export function ensureMoreThanOneDigit(str) {
-	if (String(str).length === 1) str = ('0' + str);
-
-	return str;
-}
-
+// Returns current date as string of digits.
+// Default format is yymmdd, i.e '190522' for May 22, 2019.
 
 export function getDateID(
-	options: getFormattedDateOptions = undefined
+	options: getDateIDOptions = undefined
 ): string {
-	let defaults = getDefaultsFor_getFormattedDateOptions();
+	let defaults = getDefaultsFor_getDateIDOptions();
 	if (hasValue(options)) modifyObject(defaults, options);
 
 	return __getDateOrTimeID(defaults, () => {
-		let [year, month, day] = getYearMonthDay_asArray(defaults.includeFullYear);
+		let [year, month, day] = getYearMonthDayIDs(defaults.includeFullYear);
 		return {y: year, m: month, d: day};
 	});
 }
 
 
+// Returns current time as string of digits.
+// Default format is hhmmss, i.e '162020' for 4:20pm and 20 seconds.
+
 export function getTimeID(
-	options: getFormattedTimeOptions = undefined
+	options: getTimeIDOptions = undefined
 ): string {
-	let defaults = getDefaultsFor_getFormattedTimeOptions();
+	let defaults = getDefaultsFor_getTimeIDOptions();
 	if (hasValue(options)) modifyObject(defaults, options);
 
 	return __getDateOrTimeID(defaults, () => {
-		let [hour, mins, secs] = getHoursMinutesSeconds_asArray();
+		let [hour, mins, secs] = getHoursMinutesSeconds();
 		return {h: hour, m: mins, s: secs};
 	});
 }
 
 
-export function __getDateOrTimeID(options, getKeys: () => Object) {
+export function __getDateOrTimeID(options, getParts: () => Object) {
 	// @ts-ignore
 	options.order = options.order.toLowerCase();
 	if (options.order.length !== 3) throw new Error('Input must be string 3 characters long');
 
-	let keys = getKeys(); // must return object with 3 letter keys, either {y, m, d} or {h, m, s}
+	let parts = getParts(); // must return object with 3 letter properties, either {y,m,d} or {h,m,s}
 
 	let sep = options.separateEach ? options.separator : '';
-	return (keys[options.order[0]] + sep + keys[options.order[1]] + sep + keys[options.order[2]]);
+	return (parts[options.order[0]] + sep + parts[options.order[1]] + sep + parts[options.order[2]]);
 }
 
 
@@ -81,69 +49,69 @@ export type DateFormatOrder = 'ymd' | 'ydm' | 'myd' | 'mdy' | 'dym' | 'dmy';
 export type TimeFormatOrder = 'hms' | 'hsm' | 'msh' | 'mhs' | 'smh' | 'shm';
 
 
-export interface FormattingSeparatorOptions {
+export interface SeparatorOptions {
 	separator?: string,
 	separateEach?: boolean
 }
 
 
-export interface getFormattedTimeOptions extends FormattingSeparatorOptions {
+export interface getTimeIDOptions extends SeparatorOptions {
 	order?: TimeFormatOrder
 }
 
 
-export interface YearFormattingSeparatorOptions extends FormattingSeparatorOptions {
+export interface YearSeparatorOptions extends SeparatorOptions {
 	includeFullYear?: boolean
 }
 
 
-export interface getFormattedDateOptions extends YearFormattingSeparatorOptions {
+export interface getDateIDOptions extends YearSeparatorOptions {
 	order?: DateFormatOrder,
 }
 
 
-export interface getDateTimeOptions extends YearFormattingSeparatorOptions {
+export interface getDateTimeIDOptions extends YearSeparatorOptions {
 	ymdOrder?: DateFormatOrder,
 	hmsOrder?: TimeFormatOrder
 }
 
 
-export function getDefaultsFor_FormattingSeparatorOptions(): FormattingSeparatorOptions {
+export function getDefaultsFor_SeparatorOptions(): SeparatorOptions {
 	return {separator: default_separator, separateEach: default_separateEach};
 }
 
 
-export function getDefaultsFor_getFormattedTimeOptions(): getFormattedTimeOptions {
-	let defaults = getDefaultsFor_FormattingSeparatorOptions();
+export function getDefaultsFor_getTimeIDOptions(): getTimeIDOptions {
+	let defaults = getDefaultsFor_SeparatorOptions();
 	defaults['order'] = default_hmsOrder;
 	return defaults;
 }
 
 
-export function getDefaultsFor_YearFormattingSeparatorOptions(): YearFormattingSeparatorOptions {
-	let defaults = getDefaultsFor_FormattingSeparatorOptions();
+export function getDefaultsFor_YearSeparatorOptions(): YearSeparatorOptions {
+	let defaults = getDefaultsFor_SeparatorOptions();
 	defaults['includeFullYear'] = default_includeFullYear;
 	return defaults;
 }
 
 
-export function getDefaultsFor_getFormattedDateOptions(): getFormattedDateOptions {
-	let defaults = getDefaultsFor_YearFormattingSeparatorOptions();
+export function getDefaultsFor_getDateIDOptions(): getDateIDOptions {
+	let defaults = getDefaultsFor_YearSeparatorOptions();
 	defaults['order'] = default_ymdOrder;
 	return defaults;
 }
 
 
-export function getDefaultsFor_getDateTimeOptions(): getDateTimeOptions {
-	let defaults = getDefaultsFor_YearFormattingSeparatorOptions();
+export function getDefaultsFor_getDateTimeIDOptions(): getDateTimeIDOptions {
+	let defaults = getDefaultsFor_YearSeparatorOptions();
 	defaults['ymdOrder'] = default_ymdOrder;
 	defaults['hmsOrder'] = default_hmsOrder;
 	return defaults;
 }
 
 
-export let default_ymdOrder = 'ymd';
-export let default_hmsOrder = 'hms';
-export let default_includeFullYear = false;
-export let default_separator = '-';
-export let default_separateEach = false;
+export const default_ymdOrder = 'ymd';
+export const default_hmsOrder = 'hms';
+export const default_includeFullYear = false;
+export const default_separator = '-';
+export const default_separateEach = false;
