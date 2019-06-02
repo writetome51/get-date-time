@@ -1,11 +1,5 @@
-export type DateFormatOrder = 'ymd' | 'ydm' | 'myd' | 'mdy' | 'dym' | 'dmy';
-export type TimeFormatOrder = 'hms' | 'hsm' | 'msh' | 'mhs' | 'smh' | 'shm';
-
-
-export interface SeparatorOptions {
-	separator?: string,
-	separateEach?: boolean
-}
+import { DateFormatOrder, TimeFormatOrder } from 'types-date-format-order-time-format-order';
+import { SeparatorOptions, YearSeparatorOptions } from '@writetome51/year-separator-options';
 
 
 export interface getTimeIDOptions extends SeparatorOptions {
@@ -13,17 +7,6 @@ export interface getTimeIDOptions extends SeparatorOptions {
 }
 
 
-export interface YearSeparatorOptions extends SeparatorOptions {
-	includeFullYear?: boolean
-}
-
-
 export interface getDateIDOptions extends YearSeparatorOptions {
-	order?: DateFormatOrder,
-}
-
-
-export interface getDateTimeIDOptions extends YearSeparatorOptions {
-	ymdOrder?: DateFormatOrder,
-	hmsOrder?: TimeFormatOrder
+	order?: DateFormatOrder
 }

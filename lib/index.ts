@@ -1,7 +1,10 @@
+import { DateFormatOrder, TimeFormatOrder } from 'types-date-format-order-time-format-order';
+import { getDateID, getTimeID, default_ymdOrder, default_hmsOrder } from './privy';
+import { getDefaultsFor_YearSeparatorOptions, YearSeparatorOptions }
+	from '@writetome51/year-separator-options';
 import { hasValue } from '@writetome51/has-value-no-value';
 import { modifyObject } from '@writetome51/modify-object';
-import { getDefaultsFor_getDateTimeIDOptions, getDateID, getTimeID } from './privy';
-import { getDateTimeIDOptions } from './privy/interfaces';
+
 
 // Returns current date and time as string of digits.
 // Default format is yymmdd-hhmmss, i.e '190522-142210'  for May 22, 2019, 2:22pm and 10 seconds.
@@ -32,4 +35,18 @@ export function getDateTimeID(
 	let timeStr = getTimeID(defaults);
 
 	return (dateStr + defaults.separator + timeStr);
+}
+
+
+export function getDefaultsFor_getDateTimeIDOptions(): getDateTimeIDOptions {
+	let defaults = getDefaultsFor_YearSeparatorOptions();
+	defaults['ymdOrder'] = default_ymdOrder;
+	defaults['hmsOrder'] = default_hmsOrder;
+	return defaults;
+}
+
+
+export interface getDateTimeIDOptions extends YearSeparatorOptions {
+	ymdOrder?: DateFormatOrder,
+	hmsOrder?: TimeFormatOrder
 }

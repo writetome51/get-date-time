@@ -2,10 +2,9 @@ import { hasValue } from '@writetome51/has-value-no-value';
 import { modifyObject } from '@writetome51/modify-object';
 import { getArray_hoursMinutesSeconds, getArray_yearMonthDay }
 	from '@writetome51/get-array-year-month-day-hours-minutes-seconds';
-import {
-	getDateIDOptions, getDateTimeIDOptions, getTimeIDOptions, SeparatorOptions, YearSeparatorOptions
-}
-	from './interfaces';
+import { getDateIDOptions, getTimeIDOptions } from './interfaces';
+import { getDefaultsFor_SeparatorOptions, getDefaultsFor_YearSeparatorOptions }
+	from '@writetome51/year-separator-options';
 
 
 // Returns current date as string of digits.
@@ -15,13 +14,11 @@ export function getDateID(
 	options: getDateIDOptions = undefined
 ): string {
 
-	let defaults = getDefaultsFor_getDateIDOptions();
-
 	return __getDateOrTimeID(
-		defaults,
+		getDefaultsFor_getDateIDOptions(),
 		options,
-		() => {
-			let [year, month, day] = getArray_yearMonthDay(defaults.includeFullYear);
+		(combinedOptions) => {
+			let [year, month, day] = getArray_yearMonthDay(combinedOptions.includeFullYear);
 			return {y: year, m: month, d: day};
 		}
 	);
@@ -48,15 +45,19 @@ export function getTimeID(
 
 export function __getDateOrTimeID(
 	defaultOptions,
-	options: getDateIDOptions | getTimeIDOptions,
-	getParts: () => Object // must return object with 3 letter properties, either {y,m,d} or {h,m,s}
+	userProvidedOptions: getDateIDOptions | getTimeIDOptions,
+
+	// `combinedOptions` is `defaultOptions` with `userProvidedOptions` merged into it.
+	// must return object with 3 letter properties, either {y,m,d} or {h,m,s} .
+
+	getParts: (combinedOptions) => Object
 ) {
-	if (hasValue(options)) modifyObject(defaultOptions, options);
+	if (hasValue(userProvidedOptions)) modifyObject(defaultOptions, userProvidedOptions);
 	// @ts-ignore
 	defaultOptions.order = defaultOptions.order.toLowerCase();
 	if (defaultOptions.order.length !== 3) throw new Error('Input must be string 3 characters long');
 
-	let parts = getParts();
+	let parts = getParts(defaultOptions);
 
 	let sep = defaultOptions.separateEach ? defaultOptions.separator : '';
 
@@ -65,21 +66,9 @@ export function __getDateOrTimeID(
 }
 
 
-export function getDefaultsFor_SeparatorOptions(): SeparatorOptions {
-	return {separator: default_separator, separateEach: default_separateEach};
-}
-
-
 export function getDefaultsFor_getTimeIDOptions(): getTimeIDOptions {
 	let defaults = getDefaultsFor_SeparatorOptions();
 	defaults['order'] = default_hmsOrder;
-	return defaults;
-}
-
-
-export function getDefaultsFor_YearSeparatorOptions(): YearSeparatorOptions {
-	let defaults = getDefaultsFor_SeparatorOptions();
-	defaults['includeFullYear'] = default_includeFullYear;
 	return defaults;
 }
 
@@ -91,16 +80,5 @@ export function getDefaultsFor_getDateIDOptions(): getDateIDOptions {
 }
 
 
-export function getDefaultsFor_getDateTimeIDOptions(): getDateTimeIDOptions {
-	let defaults = getDefaultsFor_YearSeparatorOptions();
-	defaults['ymdOrder'] = default_ymdOrder;
-	defaults['hmsOrder'] = default_hmsOrder;
-	return defaults;
-}
-
-
 export const default_ymdOrder = 'ymd';
 export const default_hmsOrder = 'hms';
-export const default_includeFullYear = false;
-export const default_separator = '-';
-export const default_separateEach = false;

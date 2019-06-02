@@ -1,5 +1,5 @@
 {
-  "name": "@writetome51/get-date-time",
+  "name": "@writetome51/get-date-time-id",
   "version": "1.0.0",
   "description": "Returns date and time as string, with this default format: YYMMDD-HHMMSS . You have options to change format.",
   "main": "dist/index.js",
@@ -28,6 +28,8 @@
     "@writetome51/get-array-year-month-day-hours-minutes-seconds": "0.0.1",
     "@writetome51/has-value-no-value": "^1.0.2",
     "@writetome51/modify-object": "^1.0.0",
-    "@writetome51/not": "^1.0.5"
+    "@writetome51/not": "^1.0.5",
+    "@writetome51/year-separator-options": "0.0.1",
+    "types-date-format-order-time-format-order": "^0.0.1"
   }
 }
